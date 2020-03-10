@@ -180,8 +180,8 @@ function Tile({ index, pos, onClick }) {
   const max_height = clamp(height / COLS_COUNT, 50, 100);
   const tile_size = Math.min(max_height, max_width) - TILE_SPACING;
 
-  const top = pos[0] * TILE_SIZE + TILE_SPACING;
-  const left = pos[1] * TILE_SIZE + TILE_SPACING;
+  const top = (pos[0] * (tile_size + TILE_SPACING)) + TILE_SPACING;
+  const left = (pos[1] * (tile_size + TILE_SPACING)) + TILE_SPACING;
   const tileNumber = index + 1;
 
   const tileStyle = {
@@ -203,13 +203,18 @@ function Tile({ index, pos, onClick }) {
 function App() {
   const [board, winner, newGame, move] = useGameState();
 
-  const width = TILE_SIZE *  ROWS_COUNT - 1 + TILE_SPACING;
-  const height = TILE_SIZE * COLS_COUNT - 1 + TILE_SPACING;
+  const { height, width } = useWindowDimensions();
+  const max_width = clamp(width /  ROWS_COUNT, 50, 100);
+  const max_height = clamp(height / COLS_COUNT, 50, 100);
+  const tile_size = Math.min(max_height, max_width);
+
+  const boardWidth = (tile_size * COLS_COUNT)+TILE_SPACING;
+  const boardHeight = (tile_size * ROWS_COUNT)+TILE_SPACING;
 
   return (
     <div
       className="game-container"
-      style={{ width: `${width}px`, height: `${height}px` }}
+      style={{ width: `${boardWidth}px`, height: `${boardHeight}px` }}
     >
       <div>
         <button className="reset-button" onClick={newGame}>
